@@ -66,13 +66,14 @@
 
 ---
 
-## 🚀 Instalación y Ejecución
+## 🚀 Guía de Inicio Rápido
 
 ### Prerrequisitos
-- Node.js 18+
-- Python 3.11+
-- Docker (o MongoDB instalado localmente)
-- [Ollama](https://ollama.com/) instalado en tu sistema
+
+- **Node.js** 18+
+- **Python** 3.11+
+- **Docker** (o MongoDB instalado localmente)
+- **[Ollama](https://ollama.com/)** instalado en tu sistema
 
 ### 1️⃣ Iniciar Ollama y descargar el modelo de visión
 
@@ -96,7 +97,7 @@ npm install
 npm run dev
 ```
 
-El servidor arrancará en `http://localhost:5000`
+> El servidor arrancará en `http://localhost:5000`
 
 ### 4️⃣ Servicio IA (FastAPI)
 
@@ -115,7 +116,7 @@ pip install -r requirements.txt
 uvicorn app.main:app --reload --port 8000
 ```
 
-El servicio IA estará en `http://localhost:8000`
+> El servicio IA estará en `http://localhost:8000`
 
 > **Nota:** La primera ejecución descargará automáticamente los pesos del modelo YOLOv8n (~6 MB).
 
@@ -127,7 +128,7 @@ npm install
 npm run dev
 ```
 
-Abre [http://localhost:5173](http://localhost:5173) en tu navegador 🎉
+> Abre **http://localhost:5173** en tu navegador 🎉
 
 ---
 
@@ -162,7 +163,7 @@ VisionMemory/
 
 ## 🔌 API Endpoints
 
-| Método | Endpoint | Descripción |
+| Método | Ruta | Descripción |
 |---|---|---|
 | `POST` | `/api/analyze` | Sube una imagen, ejecuta el pipeline completo y devuelve el análisis |
 | `GET` | `/api/analyses?page=&limit=` | Lista todos los análisis pasados (paginado) |
@@ -177,7 +178,7 @@ VisionMemory/
 
 - ✅ **Sin API keys ni tokens** — YOLOv8 y Ollama se ejecutan localmente.
 - ✅ **IA 100% local** — Ollama se ejecuta en tu máquina, tus imágenes nunca salen de tu equipo.
-- ✅ `.env` excluido del repositorio — El `.gitignore` protege cualquier variable sensible.
+- ✅ **`.env` excluido del repositorio** — El `.gitignore` protege cualquier variable sensible.
 - ✅ **Sin datos personales expuestos** — Todo el procesamiento ocurre en tu máquina.
 
 ---
@@ -200,6 +201,10 @@ Esto permite que el sistema **aprenda y mejore** con cada imagen:
 
 ## 📄 Licencia
 
-Este proyecto está bajo licencia MIT.
+Este proyecto está bajo licencia **MIT**.
 
-Hecho con ❤️ y visión artificial
+---
+
+<p align="center">
+  Hecho con ❤️ y visión artificial
+</p>
