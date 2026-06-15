@@ -36,15 +36,7 @@
 | ✅ | **Indicador "Memory used"** | Badge visual que indica si el análisis se enriqueció con conocimiento acumulado de análisis previos. |
 | 🔒 | **Privacidad total** | Sin API keys, sin cuentas, sin envío de datos a la nube. Todo funciona en local. |
 
----
 
-## 📸 Capturas de Pantalla
-
-  <br />
-  <em>Memory — base de conocimiento acumulada con observaciones, frecuencia y etiquetas co-ocurrentes</em>
-</p>
-
----
 
 ## 🛠️ Stack Tecnológico
 
