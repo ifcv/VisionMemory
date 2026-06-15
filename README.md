@@ -190,5 +190,5 @@ Este proyecto está bajo licencia **MIT**.
 ---
 
 <p align="center">
-  Hecho con ❤️ y visión artificial
+  Hecho con ❤️ por <a href="https://www.linkedin.com/in/ignacio-fernandez-clemente-vazquez/">ifcv</a>
 </p>

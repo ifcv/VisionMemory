@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Camera, History, Brain, LayoutDashboard, Settings, FolderOpen, Image as ImageIcon, Search, Bell } from 'lucide-react';
+import { Camera, Brain } from 'lucide-react';
 
 const Sidebar = () => {
   const location = useLocation();
@@ -32,24 +32,6 @@ const Sidebar = () => {
           <span>Upload</span>
         </Link>
       </nav>
-    </div>
-  );
-};
-
-export const Topbar = () => {
-  return (
-    <div className="flex justify-between items-center px-10 py-6">
-      <div className="relative w-96">
-        <Search className="w-5 h-5 text-slate-500 absolute left-4 top-1/2 transform -translate-y-1/2" />
-        <input 
-          type="text" 
-          placeholder="Search..." 
-          className="w-full pl-12 pr-4 py-2.5 glass-input text-sm placeholder-slate-500"
-        />
-      </div>
-      <div className="flex items-center space-x-6">
-        {/* User and bell removed as requested */}
-      </div>
     </div>
   );
 };
