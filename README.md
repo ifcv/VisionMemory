@@ -40,14 +40,6 @@
 
 ## 📸 Capturas de Pantalla
 
-<p align="center">
-  <img src="docs/screenshots/upload.png" alt="Página de Upload con análisis" width="80%" />
-  <br />
-  <em>Upload — sube una imagen, detecta objetos con YOLOv8, y recibe un análisis visual detallado</em>
-</p>
-
-<p align="center">
-  <img src="docs/screenshots/memory.png" alt="Página de Memory" width="80%" />
   <br />
   <em>Memory — base de conocimiento acumulada con observaciones, frecuencia y etiquetas co-ocurrentes</em>
 </p>

@@ -1,5 +1,5 @@
-import React, { useState, useCallback } from 'react';
-import { Upload, Monitor, Share, Trash2, Edit3, Download, Sparkles } from 'lucide-react';
+import React, { useState, useCallback, useRef } from 'react';
+import { Upload, Monitor, Share, Trash2, Edit3, Download, Sparkles, Square, PlusCircle } from 'lucide-react';
 import ImageCanvas from '../components/ImageCanvas';
 import api from '../utils/api';
 
@@ -10,6 +10,8 @@ const UploadPage: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [dragOver, setDragOver] = useState(false);
+  
+  const abortControllerRef = useRef<AbortController | null>(null);
 
   const handleFileSelect = (file: File) => {
     setSelectedFile(file);
@@ -44,19 +46,40 @@ const UploadPage: React.FC = () => {
     setLoading(true);
     setError(null);
 
+    abortControllerRef.current = new AbortController();
+
     const formData = new FormData();
     formData.append('image', selectedFile);
 
     try {
       const response = await api.post('/api/analyze', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
+        signal: abortControllerRef.current.signal
       });
       setAnalysisResult(response.data);
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Error al analizar la imagen.');
+      if (err.name === 'CanceledError' || err.message === 'canceled') {
+        setError('Análisis cancelado por el usuario.');
+      } else {
+        setError(err.response?.data?.message || 'Error al analizar la imagen.');
+      }
     } finally {
       setLoading(false);
+      abortControllerRef.current = null;
     }
+  };
+
+  const onStop = () => {
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+  };
+
+  const resetPage = () => {
+    setSelectedFile(null);
+    setPreview(null);
+    setAnalysisResult(null);
+    setError(null);
   };
 
   return (
@@ -65,8 +88,9 @@ const UploadPage: React.FC = () => {
 
       {/* Error */}
       {error && (
-        <div className="glass-card rounded-xl p-4 mb-8 border-red-500/30 bg-red-500/10">
-          <p className="text-red-300 text-center">{error}</p>
+        <div className="glass-card rounded-xl p-4 mb-8 border-red-500/30 bg-red-500/10 flex justify-between items-center">
+          <p className="text-red-300">{error}</p>
+          <button onClick={() => setError(null)} className="text-red-300 hover:text-white">x</button>
         </div>
       )}
 
@@ -105,9 +129,19 @@ const UploadPage: React.FC = () => {
             )}
           </div>
           {loading && (
-            <div className="flex items-center space-x-3 text-fuchsia-400">
-              <div className="w-6 h-6 border-2 border-current border-t-transparent rounded-full animate-spin"></div>
-              <span className="font-medium text-lg tracking-wide">Analizando escena...</span>
+            <div className="flex items-center space-x-6 glass-card px-8 py-4 rounded-full">
+              <div className="flex items-center space-x-3 text-fuchsia-400">
+                <div className="w-6 h-6 border-2 border-current border-t-transparent rounded-full animate-spin"></div>
+                <span className="font-medium text-lg tracking-wide">Analizando escena...</span>
+              </div>
+              <div className="w-px h-8 bg-white/10"></div>
+              <button 
+                onClick={onStop}
+                className="flex items-center space-x-2 text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 px-4 py-2 rounded-lg transition-colors font-medium"
+              >
+                <Square className="w-4 h-4 fill-current" />
+                <span>STOP</span>
+              </button>
             </div>
           )}
         </div>
@@ -165,18 +199,14 @@ const UploadPage: React.FC = () => {
                 <p>Modelo: llama3.2-vision</p>
               </div>
               
-              <div className="flex items-center space-x-3 w-full md:w-auto">
+              <div className="flex items-center space-x-3 flex-wrap w-full md:w-auto gap-y-2">
+                <button onClick={resetPage} className="flex-1 md:flex-none flex items-center justify-center space-x-2 px-5 py-2.5 btn-primary rounded-xl text-sm font-bold bg-fuchsia-600 hover:bg-fuchsia-500 text-white transition-colors shadow-lg shadow-fuchsia-500/25">
+                  <PlusCircle className="w-4 h-4" />
+                  <span>Analizar una nueva imagen</span>
+                </button>
                 <button className="flex-1 md:flex-none flex items-center justify-center space-x-2 px-5 py-2.5 btn-glow rounded-xl text-sm font-semibold">
                   <Download className="w-4 h-4" />
                   <span>Descargar Reporte</span>
-                </button>
-                <button className="flex items-center space-x-2 px-4 py-2.5 btn-ghost rounded-xl text-sm font-medium">
-                  <Share className="w-4 h-4" />
-                  <span>Compartir</span>
-                </button>
-                <button className="flex items-center space-x-2 px-4 py-2.5 btn-ghost rounded-xl text-sm font-medium">
-                  <Edit3 className="w-4 h-4" />
-                  <span>Editar</span>
                 </button>
               </div>
             </div>

@@ -31,45 +31,6 @@ const Sidebar = () => {
           <Camera className="w-5 h-5" />
           <span>Upload</span>
         </Link>
-        <Link 
-          to="/history" 
-          className={`flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${
-            isActive('/history') 
-              ? 'sidebar-link-active' 
-              : 'text-slate-400 hover:text-slate-200 hover:bg-white/5'
-          }`}
-        >
-          <History className="w-5 h-5" />
-          <span>History Log</span>
-        </Link>
-        <Link 
-          to="/memory" 
-          className={`flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${
-            isActive('/memory') 
-              ? 'sidebar-link-active' 
-              : 'text-slate-400 hover:text-slate-200 hover:bg-white/5'
-          }`}
-        >
-          <Brain className="w-5 h-5" />
-          <span>Memory Dashboard</span>
-        </Link>
-        
-        {/* Mock Links to match image */}
-        <div className="pt-6 pb-2 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">
-          More
-        </div>
-        <a href="#" className="flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-400 hover:text-slate-200 hover:bg-white/5 transition-all">
-          <FolderOpen className="w-5 h-5" />
-          <span>Projects</span>
-        </a>
-        <a href="#" className="flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-400 hover:text-slate-200 hover:bg-white/5 transition-all">
-          <ImageIcon className="w-5 h-5" />
-          <span>Gallery</span>
-        </a>
-        <a href="#" className="flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-400 hover:text-slate-200 hover:bg-white/5 transition-all">
-          <Settings className="w-5 h-5" />
-          <span>Settings</span>
-        </a>
       </nav>
     </div>
   );
@@ -87,16 +48,7 @@ export const Topbar = () => {
         />
       </div>
       <div className="flex items-center space-x-6">
-        <button className="relative text-slate-400 hover:text-white transition-colors">
-          <Bell className="w-5 h-5" />
-          <span className="absolute top-0 right-0 w-2 h-2 bg-pink-500 rounded-full"></span>
-        </button>
-        <div className="flex items-center space-x-3 cursor-pointer">
-          <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-purple-500 to-pink-500 flex items-center justify-center text-white text-sm font-bold shadow-lg shadow-purple-500/30">
-            DF
-          </div>
-          <span className="text-sm font-medium text-slate-200">Diego Fernández</span>
-        </div>
+        {/* User and bell removed as requested */}
       </div>
     </div>
   );
