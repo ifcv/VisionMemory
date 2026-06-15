@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { History, Eye, ChevronLeft, ChevronRight, Clock, Tag } from 'lucide-react';
+import { Clock } from 'lucide-react';
 import api from '../utils/api';
 
 const HistoryPage: React.FC = () => {
@@ -26,79 +26,58 @@ const HistoryPage: React.FC = () => {
   }, [page]);
 
   const formatDate = (dateStr: string) => {
-    return new Date(dateStr).toLocaleString('es-ES', {
+    return new Date(dateStr).toLocaleString('en-US', {
       day: '2-digit',
       month: 'short',
       year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
     });
   };
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-6xl">
-      <div className="text-center mb-10">
-        <h1 className="text-4xl font-bold bg-gradient-to-r from-violet-300 via-purple-300 to-pink-300 bg-clip-text text-transparent mb-3">
-          Historial de Análisis
-        </h1>
-        <p className="text-slate-400 text-lg">
-          Revisa todos los análisis realizados anteriormente
-        </p>
+    <div className="w-full">
+      <div className="mb-10">
+        <h2 className="text-3xl font-bold text-white mb-2">History Log</h2>
+        <p className="text-slate-400">Review past image analyses and AI inferences</p>
       </div>
 
       {loading ? (
         <div className="flex justify-center items-center py-20">
-          <div className="w-10 h-10 border-2 border-violet-400/30 border-t-violet-400 rounded-full animate-spin"></div>
+          <div className="w-10 h-10 border-2 border-fuchsia-500/30 border-t-fuchsia-500 rounded-full animate-spin"></div>
         </div>
       ) : analyses.length === 0 ? (
         <div className="glass-card rounded-2xl p-16 text-center">
-          <History className="w-16 h-16 text-slate-600 mx-auto mb-4" />
-          <p className="text-slate-400 text-lg mb-2">No hay análisis todavía</p>
-          <p className="text-slate-500">Sube tu primera imagen para empezar a construir memoria visual</p>
+          <p className="text-slate-400 text-lg mb-2">No past analyses found</p>
         </div>
       ) : (
         <>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
             {analyses.map((analysis: any) => (
-              <div key={analysis._id} className="glass-card rounded-2xl overflow-hidden group">
-                <div className="aspect-video overflow-hidden bg-black/20">
+              <div key={analysis._id} className="glass-card overflow-hidden group flex flex-col">
+                <div className="h-48 overflow-hidden bg-black/40 relative">
                   <img
                     src={`http://localhost:5000${analysis.imagePath}`}
-                    alt="Imagen analizada"
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    alt="Analyzed"
+                    className="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500"
                   />
-                </div>
-                <div className="p-5">
-                  <div className="flex items-center space-x-2 text-slate-500 text-xs mb-3">
-                    <Clock className="w-3.5 h-3.5" />
-                    <span>{formatDate(analysis.createdAt)}</span>
+                  <div className="absolute top-4 right-4 glass-light px-3 py-1.5 rounded-lg flex items-center space-x-1.5 backdrop-blur-md">
+                    <Clock className="w-3.5 h-3.5 text-slate-300" />
+                    <span className="text-xs font-semibold text-white">{formatDate(analysis.createdAt)}</span>
                   </div>
-
+                </div>
+                <div className="p-6 flex-1 flex flex-col">
                   {analysis.detectedLabels && analysis.detectedLabels.length > 0 && (
-                    <div className="flex flex-wrap gap-1.5 mb-3">
-                      {analysis.detectedLabels.slice(0, 4).map((d: any, i: number) => (
-                        <span key={i} className="badge-label text-xs px-2 py-1 rounded-full">
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      {analysis.detectedLabels.slice(0, 3).map((d: any, i: number) => (
+                        <span key={i} className="text-xs px-2.5 py-1 rounded-md font-medium bg-fuchsia-500/10 text-fuchsia-300 border border-fuchsia-500/20">
                           {d.label}
                         </span>
                       ))}
-                      {analysis.detectedLabels.length > 4 && (
-                        <span className="badge-related text-xs px-2 py-1 rounded-full">
-                          +{analysis.detectedLabels.length - 4} más
-                        </span>
-                      )}
                     </div>
                   )}
 
                   <p className="text-slate-400 text-sm line-clamp-3 leading-relaxed">
                     {analysis.llmResponse}
                   </p>
-
-                  {analysis.memoryUsed && (
-                    <div className="mt-3 flex items-center space-x-1.5">
-                      <Tag className="w-3.5 h-3.5 text-emerald-400" />
-                      <span className="text-emerald-400 text-xs font-medium">Memoria utilizada</span>
-                    </div>
-                  )}
                 </div>
               </div>
             ))}
@@ -106,23 +85,23 @@ const HistoryPage: React.FC = () => {
 
           {/* Pagination */}
           {totalPages > 1 && (
-            <div className="flex justify-center items-center space-x-4 mt-10">
+            <div className="flex justify-center items-center space-x-4 mt-12">
               <button
                 onClick={() => setPage(p => Math.max(1, p - 1))}
                 disabled={page === 1}
-                className="glass p-2.5 rounded-xl disabled:opacity-30 hover:bg-white/10 transition-all disabled:cursor-not-allowed"
+                className="btn-ghost px-4 py-2 rounded-xl text-sm font-semibold disabled:opacity-30 disabled:cursor-not-allowed"
               >
-                <ChevronLeft className="w-5 h-5" />
+                Previous
               </button>
               <span className="text-slate-400 text-sm font-medium">
-                Página {page} de {totalPages}
+                Page {page} of {totalPages}
               </span>
               <button
                 onClick={() => setPage(p => Math.min(totalPages, p + 1))}
                 disabled={page === totalPages}
-                className="glass p-2.5 rounded-xl disabled:opacity-30 hover:bg-white/10 transition-all disabled:cursor-not-allowed"
+                className="btn-ghost px-4 py-2 rounded-xl text-sm font-semibold disabled:opacity-30 disabled:cursor-not-allowed"
               >
-                <ChevronRight className="w-5 h-5" />
+                Next
               </button>
             </div>
           )}

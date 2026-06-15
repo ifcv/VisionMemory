@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { Upload, Loader2, Sparkles, Brain, Eye } from 'lucide-react';
+import { Upload, Monitor, Share, Trash2, Edit3, Download, Sparkles } from 'lucide-react';
 import ImageCanvas from '../components/ImageCanvas';
 import api from '../utils/api';
 
@@ -53,79 +53,15 @@ const UploadPage: React.FC = () => {
       });
       setAnalysisResult(response.data);
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Error al analizar la imagen. Asegúrate de que todos los servicios estén activos.');
+      setError(err.response?.data?.message || 'Error al analizar la imagen.');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-5xl">
-      <div className="text-center mb-10">
-        <h1 className="text-4xl font-bold bg-gradient-to-r from-violet-300 via-purple-300 to-pink-300 bg-clip-text text-transparent mb-3">
-          Análisis Visual con IA
-        </h1>
-        <p className="text-slate-400 text-lg">
-          Sube una imagen para detectar objetos, analizar la escena y construir memoria visual
-        </p>
-      </div>
-
-      {/* Upload zone */}
-      <div className="glass-card rounded-2xl p-8 mb-8">
-        <div
-          onDrop={onDrop}
-          onDragOver={onDragOver}
-          onDragLeave={onDragLeave}
-          className={`border-2 border-dashed rounded-xl p-12 text-center transition-all cursor-pointer ${
-            dragOver 
-              ? 'border-violet-400 bg-violet-500/10' 
-              : 'border-white/15 hover:border-white/25 hover:bg-white/5'
-          }`}
-        >
-          <input
-            type="file"
-            accept="image/*"
-            onChange={onFileChange}
-            className="hidden"
-            id="file-upload"
-          />
-          <label htmlFor="file-upload" className="cursor-pointer">
-            <Upload className={`w-12 h-12 mx-auto mb-4 transition-colors ${dragOver ? 'text-violet-400' : 'text-slate-500'}`} />
-            <p className="text-slate-300 font-medium text-lg mb-1">
-              Arrastra una imagen aquí o haz clic para seleccionar
-            </p>
-            <p className="text-slate-500 text-sm">PNG, JPG, WEBP — máximo 10 MB</p>
-          </label>
-        </div>
-
-        {/* Preview */}
-        {preview && !analysisResult && (
-          <div className="mt-6">
-            <div className="glass-light rounded-xl overflow-hidden">
-              <img src={preview} alt="Vista previa" className="max-h-96 mx-auto" />
-            </div>
-            <div className="flex justify-center mt-6">
-              <button
-                onClick={onSubmit}
-                disabled={loading}
-                className="btn-primary text-white px-8 py-3 rounded-xl font-semibold flex items-center space-x-2 disabled:cursor-not-allowed"
-              >
-                {loading ? (
-                  <>
-                    <Loader2 className="w-5 h-5 animate-spin" />
-                    <span>Analizando...</span>
-                  </>
-                ) : (
-                  <>
-                    <Sparkles className="w-5 h-5" />
-                    <span>Analizar imagen</span>
-                  </>
-                )}
-              </button>
-            </div>
-          </div>
-        )}
-      </div>
+    <div className="max-w-4xl mx-auto">
+      <h2 className="text-2xl font-bold text-white mb-6">Análisis de Imagen</h2>
 
       {/* Error */}
       {error && (
@@ -134,46 +70,115 @@ const UploadPage: React.FC = () => {
         </div>
       )}
 
-      {/* Results */}
-      {analysisResult && (
-        <div className="space-y-6">
-          {/* Detection canvas */}
-          <div className="glass-card rounded-2xl p-6">
-            <div className="flex items-center space-x-2 mb-4">
-              <Eye className="w-5 h-5 text-violet-400" />
-              <h2 className="text-xl font-semibold text-slate-200">Detecciones</h2>
-              {analysisResult.memoryUsed && (
-                <span className="badge-memory text-xs px-2.5 py-1 rounded-full flex items-center space-x-1">
-                  <Brain className="w-3 h-3" />
-                  <span>Memoria utilizada</span>
-                </span>
-              )}
+      {/* Initial Upload State */}
+      {!preview && (
+        <div 
+          onDrop={onDrop}
+          onDragOver={onDragOver}
+          onDragLeave={onDragLeave}
+          className={`glass-card rounded-3xl p-16 text-center border-2 border-dashed transition-all cursor-pointer ${
+            dragOver ? 'border-fuchsia-500 bg-fuchsia-500/10' : 'border-white/10 hover:border-fuchsia-500/50'
+          }`}
+        >
+          <input type="file" accept="image/*" onChange={onFileChange} className="hidden" id="file-upload" />
+          <label htmlFor="file-upload" className="cursor-pointer flex flex-col items-center">
+            <div className="w-20 h-20 bg-white/5 rounded-full flex items-center justify-center mb-6">
+              <Upload className={`w-8 h-8 ${dragOver ? 'text-fuchsia-400' : 'text-slate-400'}`} />
             </div>
-            <ImageCanvas
-              imageUrl={`http://localhost:5000${analysisResult.imagePath}`}
-              detections={analysisResult.detectedLabels || []}
-            />
-            {analysisResult.detectedLabels && analysisResult.detectedLabels.length > 0 && (
-              <div className="flex flex-wrap gap-2 mt-4">
-                {analysisResult.detectedLabels.map((d: any, i: number) => (
-                  <span key={i} className="badge-label text-xs px-3 py-1.5 rounded-full font-medium">
-                    {d.label} — {Math.round(d.confidence * 100)}%
-                  </span>
-                ))}
+            <h3 className="text-xl font-semibold text-white mb-2">Sube una imagen para analizar</h3>
+            <p className="text-slate-400">Arrastra una imagen aquí o haz clic para explorar</p>
+          </label>
+        </div>
+      )}
+
+      {/* Loading state or Preview before analysis */}
+      {preview && !analysisResult && (
+        <div className="flex flex-col items-center space-y-8">
+          <div className="rounded-2xl overflow-hidden shadow-2xl shadow-purple-500/10 max-w-2xl w-full relative group">
+            <img src={preview} alt="Vista previa" className="w-full h-auto object-cover" />
+            {!loading && (
+              <div className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                <button onClick={onSubmit} className="btn-primary px-8 py-3 rounded-xl font-bold text-white shadow-lg">
+                  Iniciar Análisis con IA
+                </button>
               </div>
             )}
           </div>
-
-          {/* LLM Analysis */}
-          <div className="glass-card rounded-2xl p-6">
-            <div className="flex items-center space-x-2 mb-4">
-              <Sparkles className="w-5 h-5 text-violet-400" />
-              <h2 className="text-xl font-semibold text-slate-200">Análisis de la IA</h2>
+          {loading && (
+            <div className="flex items-center space-x-3 text-fuchsia-400">
+              <div className="w-6 h-6 border-2 border-current border-t-transparent rounded-full animate-spin"></div>
+              <span className="font-medium text-lg tracking-wide">Analizando escena...</span>
             </div>
-            <div className="prose prose-invert max-w-none">
-              <p className="text-slate-300 leading-relaxed whitespace-pre-wrap">
-                {analysisResult.llmResponse}
-              </p>
+          )}
+        </div>
+      )}
+
+      {/* Result UI matching mockup */}
+      {analysisResult && (
+        <div className="space-y-8">
+          {/* Main Image with detections */}
+          <div className="flex justify-center">
+            <div className="max-w-2xl w-full">
+              <ImageCanvas 
+                imageUrl={`http://localhost:5000${analysisResult.imagePath}`} 
+                detections={analysisResult.detectedLabels || []} 
+              />
+            </div>
+          </div>
+
+          {/* Glowing AI Card */}
+          <div className="glass-card-glow p-8 relative overflow-hidden">
+            {/* Header row */}
+            <div className="flex justify-between items-center mb-6 pb-4 border-b border-white/10">
+              <h3 className="text-xl font-bold text-white">Análisis de Imagen (AI)</h3>
+              <div className="flex space-x-2">
+                <button className="p-2 btn-ghost rounded-lg"><Monitor className="w-4 h-4" /></button>
+                <button className="p-2 btn-ghost rounded-lg"><Share className="w-4 h-4" /></button>
+                <button className="p-2 btn-ghost rounded-lg"><Trash2 className="w-4 h-4" /></button>
+              </div>
+            </div>
+
+            {/* Content row */}
+            <div className="space-y-4 mb-8">
+              <div className="text-sm">
+                <span className="font-bold text-white">Objeto Detectado: </span>
+                <span className="text-slate-300">
+                  {analysisResult.detectedLabels?.length > 0 
+                    ? analysisResult.detectedLabels.map((d:any) => `\`${d.label} (${Math.round(d.confidence*100)}%)\``).join(', ')
+                    : 'Ninguno'}
+                </span>
+              </div>
+              
+              <div className="text-sm">
+                <span className="font-bold text-white">Descripción Detallada (IA): </span>
+                <Sparkles className="inline w-3 h-3 text-fuchsia-400 mx-1" />
+                <span className="text-slate-300 leading-relaxed">
+                  {analysisResult.llmResponse}
+                </span>
+              </div>
+            </div>
+
+            {/* Footer row */}
+            <div className="flex flex-col md:flex-row justify-between items-end md:items-center pt-4 border-t border-white/10 gap-4">
+              <div className="text-xs text-slate-500">
+                <p>Fecha: {new Date().toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' })}</p>
+                <p>Modelo: llama3.2-vision</p>
+              </div>
+              
+              <div className="flex items-center space-x-3 w-full md:w-auto">
+                <button className="flex-1 md:flex-none flex items-center justify-center space-x-2 px-5 py-2.5 btn-glow rounded-xl text-sm font-semibold">
+                  <Download className="w-4 h-4" />
+                  <span>Descargar Reporte</span>
+                </button>
+                <button className="flex items-center space-x-2 px-4 py-2.5 btn-ghost rounded-xl text-sm font-medium">
+                  <Share className="w-4 h-4" />
+                  <span>Compartir</span>
+                </button>
+                <button className="flex items-center space-x-2 px-4 py-2.5 btn-ghost rounded-xl text-sm font-medium">
+                  <Edit3 className="w-4 h-4" />
+                  <span>Editar</span>
+                </button>
+              </div>
             </div>
           </div>
         </div>

@@ -27,6 +27,7 @@ const ImageCanvas: React.FC<ImageCanvasProps> = ({ imageUrl, detections }) => {
 
     img.onload = () => {
       const containerWidth = canvas.parentElement?.clientWidth || 800;
+      // Make it slightly smaller if it's too big, just like the mockup where it's a nice centered block
       const scale = Math.min(1, containerWidth / img.width);
       
       const drawWidth = img.width * scale;
@@ -35,6 +36,7 @@ const ImageCanvas: React.FC<ImageCanvasProps> = ({ imageUrl, detections }) => {
       canvas.width = drawWidth;
       canvas.height = drawHeight;
 
+      // Make image rounded corners in the mockup? Actually the mockup has a rounded canvas
       ctx.drawImage(img, 0, 0, drawWidth, drawHeight);
 
       detections.forEach((det) => {
@@ -44,46 +46,35 @@ const ImageCanvas: React.FC<ImageCanvasProps> = ({ imageUrl, detections }) => {
         const sw = w * scale;
         const sh = h * scale;
 
-        // Glow effect
-        ctx.shadowColor = 'rgba(139, 92, 246, 0.5)';
-        ctx.shadowBlur = 8;
-        ctx.strokeStyle = '#8b5cf6';
-        ctx.lineWidth = 2;
+        // Thin glowing purple bounding box like mockup
+        ctx.shadowColor = 'rgba(168, 85, 247, 0.8)';
+        ctx.shadowBlur = 10;
+        ctx.strokeStyle = '#a855f7';
+        ctx.lineWidth = 2.5;
         ctx.strokeRect(sx, sy, sw, sh);
         ctx.shadowBlur = 0;
 
-        // Label background
+        // Label background block inside top-left of bounding box
         const labelText = `${det.label} ${Math.round(det.confidence * 100)}%`;
-        ctx.font = 'bold 13px Inter, sans-serif';
+        ctx.font = '500 12px "Plus Jakarta Sans", sans-serif';
         const textMetrics = ctx.measureText(labelText);
         
-        ctx.fillStyle = 'rgba(139, 92, 246, 0.85)';
-        ctx.beginPath();
-        const radius = 4;
-        const lw = textMetrics.width + 10;
-        const lh = 22;
-        const lx = sx;
-        const ly = sy - lh - 2;
-        ctx.moveTo(lx + radius, ly);
-        ctx.lineTo(lx + lw - radius, ly);
-        ctx.quadraticCurveTo(lx + lw, ly, lx + lw, ly + radius);
-        ctx.lineTo(lx + lw, ly + lh - radius);
-        ctx.quadraticCurveTo(lx + lw, ly + lh, lx + lw - radius, ly + lh);
-        ctx.lineTo(lx + radius, ly + lh);
-        ctx.quadraticCurveTo(lx, ly + lh, lx, ly + lh - radius);
-        ctx.lineTo(lx, ly + radius);
-        ctx.quadraticCurveTo(lx, ly, lx + radius, ly);
-        ctx.fill();
+        ctx.fillStyle = '#a855f7'; // Solid purple block
+        
+        const lw = textMetrics.width + 12;
+        const lh = 20;
+        // Draw inside the box starting at top left
+        ctx.fillRect(sx - 1.25, sy - 1.25, lw, lh);
 
         ctx.fillStyle = '#ffffff';
-        ctx.fillText(labelText, sx + 5, sy - 8);
+        ctx.fillText(labelText, sx + 6, sy + 13);
       });
     };
   }, [imageUrl, detections]);
 
   return (
-    <div className="w-full flex justify-center glass-light rounded-xl overflow-hidden">
-      <canvas ref={canvasRef} className="max-w-full h-auto" />
+    <div className="w-full flex justify-center overflow-hidden rounded-2xl shadow-2xl">
+      <canvas ref={canvasRef} className="max-w-full h-auto rounded-xl" />
     </div>
   );
 };

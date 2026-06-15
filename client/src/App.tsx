@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Navbar from './components/Navbar';
+import Sidebar, { Topbar } from './components/Sidebar';
 import UploadPage from './pages/UploadPage';
 import HistoryPage from './pages/HistoryPage';
 import MemoryPage from './pages/MemoryPage';
@@ -10,15 +10,18 @@ function App() {
   return (
     <AppProvider>
       <BrowserRouter>
-        <div className="min-h-screen flex flex-col">
-          <Navbar />
-          <main className="flex-grow container mx-auto px-4 py-8">
-            <Routes>
-              <Route path="/" element={<UploadPage />} />
-              <Route path="/history" element={<HistoryPage />} />
-              <Route path="/memory" element={<MemoryPage />} />
-            </Routes>
-          </main>
+        <div className="flex min-h-screen">
+          <Sidebar />
+          <div className="flex-1 flex flex-col h-screen overflow-y-auto">
+            <Topbar />
+            <main className="flex-1 px-10 pb-10">
+              <Routes>
+                <Route path="/" element={<UploadPage />} />
+                <Route path="/history" element={<HistoryPage />} />
+                <Route path="/memory" element={<MemoryPage />} />
+              </Routes>
+            </main>
+          </div>
         </div>
       </BrowserRouter>
     </AppProvider>

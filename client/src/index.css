@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,90 +6,118 @@
 
 @layer base {
   body {
-    font-family: 'Inter', sans-serif;
+    font-family: 'Plus Jakarta Sans', sans-serif;
     @apply antialiased;
     min-height: 100vh;
-    background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+    /* Deep dark blue-grey background with subtle radial purple glows */
+    background: 
+      radial-gradient(circle at 15% 50%, rgba(168, 85, 247, 0.15), transparent 25%),
+      radial-gradient(circle at 85% 30%, rgba(236, 72, 153, 0.1), transparent 25%),
+      #0d1117;
+    background-attachment: fixed;
     color: #e2e8f0;
   }
 }
 
 @layer components {
+  /* Basic Glass Panel */
   .glass {
-    background: rgba(255, 255, 255, 0.08);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-  }
-
-  .glass-light {
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
     border: 1px solid rgba(255, 255, 255, 0.08);
   }
 
+  /* Main AI Card / Glow Card */
+  .glass-card-glow {
+    background: rgba(30, 30, 40, 0.6);
+    backdrop-filter: blur(32px);
+    -webkit-backdrop-filter: blur(32px);
+    border: 1px solid rgba(168, 85, 247, 0.5); /* Violet glow border */
+    box-shadow: 
+      0 0 20px rgba(168, 85, 247, 0.15),
+      inset 0 0 15px rgba(168, 85, 247, 0.1);
+    border-radius: 1.5rem;
+  }
+
+  /* Memory Dashboard Card */
   .glass-card {
-    background: rgba(255, 255, 255, 0.06);
+    background: rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
-    transition: all 0.3s ease;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    border-left: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.5);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 1.25rem;
   }
 
   .glass-card:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: rgba(255, 255, 255, 0.18);
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
-    transform: translateY(-2px);
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(168, 85, 247, 0.4);
+    box-shadow: 0 15px 50px -10px rgba(168, 85, 247, 0.2);
+    transform: translateY(-4px);
   }
 
   .glass-input {
-    background: rgba(255, 255, 255, 0.06);
+    background: rgba(0, 0, 0, 0.3);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.75rem;
+    color: white;
   }
 
   .glass-input:focus {
-    border-color: rgba(139, 92, 246, 0.5);
-    box-shadow: 0 0 20px rgba(139, 92, 246, 0.15);
+    outline: none;
+    border-color: rgba(168, 85, 247, 0.6);
+    box-shadow: 0 0 0 2px rgba(168, 85, 247, 0.2);
   }
 
-  .btn-primary {
-    background: linear-gradient(135deg, #7c3aed, #6d28d9);
-    box-shadow: 0 4px 15px rgba(124, 58, 237, 0.4);
-    transition: all 0.3s ease;
+  /* Sidebar Active Link */
+  .sidebar-link-active {
+    background: linear-gradient(90deg, rgba(168, 85, 247, 0.2) 0%, rgba(168, 85, 247, 0) 100%);
+    border-left: 3px solid #a855f7;
+    color: white;
   }
 
-  .btn-primary:hover {
-    background: linear-gradient(135deg, #8b5cf6, #7c3aed);
-    box-shadow: 0 6px 20px rgba(124, 58, 237, 0.5);
-    transform: translateY(-1px);
+  /* Memory Counter Text Gradient */
+  .text-gradient-pink {
+    background: linear-gradient(135deg, #f472b6, #a855f7);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
 
-  .btn-primary:disabled {
-    background: rgba(124, 58, 237, 0.3);
-    box-shadow: none;
-    transform: none;
+  /* Ghost/Glow Buttons */
+  .btn-glow {
+    background: rgba(168, 85, 247, 0.15);
+    border: 1px solid rgba(168, 85, 247, 0.4);
+    color: #e9d5ff;
+    transition: all 0.3s;
+  }
+  
+  .btn-glow:hover {
+    background: rgba(168, 85, 247, 0.3);
+    box-shadow: 0 0 15px rgba(168, 85, 247, 0.3);
   }
 
-  .badge-memory {
-    background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(16, 185, 129, 0.1));
-    border: 1px solid rgba(16, 185, 129, 0.3);
-    color: #6ee7b7;
+  .btn-ghost {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #cbd5e1;
+    transition: all 0.3s;
   }
 
-  .badge-label {
-    background: rgba(139, 92, 246, 0.15);
-    border: 1px solid rgba(139, 92, 246, 0.25);
-    color: #c4b5fd;
+  .btn-ghost:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+    color: white;
   }
 
   .badge-related {
-    background: rgba(255, 255, 255, 0.06);
+    background: rgba(0, 0, 0, 0.4);
     border: 1px solid rgba(255, 255, 255, 0.1);
     color: #94a3b8;
   }
